@@ -72,3 +72,4 @@ jobs:
         tags: ${{ github.repository }}-frontend:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
+# Déclenchement du workflow CI
