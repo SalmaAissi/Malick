@@ -1,4 +1,4 @@
-﻿notepad .github/workflows/ci.ymlname: CI - Full Stack (Python + Node.js)
+﻿name: CI - Full Stack (Python + Node.js)
 
 on:
   push:
