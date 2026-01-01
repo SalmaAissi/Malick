@@ -1,0 +1,9 @@
+name: Test Workflow - Simple
+
+on: [push]
+
+jobs:
+  test-echo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "✅ Le workflow GitHub Actions fonctionne."
