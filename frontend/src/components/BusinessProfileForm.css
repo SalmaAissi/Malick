@@ -1,0 +1,161 @@
+﻿/* BusinessProfileForm.css - Version complète */
+
+.business-profile-form {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.business-profile-form h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #3498db;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #34495e;
+    font-size: 15px;
+}
+
+.form-group label::after {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background-color: #e74c3c;
+    border-radius: 50%;
+    margin-left: 4px;
+    vertical-align: super;
+}
+
+.form-group label[for]:not([for=""])::after {
+    content: '*';
+    color: #e74c3c;
+    margin-left: 4px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #dfe6e9;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    background-color: #f8f9fa;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #3498db;
+    background-color: #ffffff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+button[type="submit"] {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    width: 100%;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    letter-spacing: 0.5px;
+}
+
+button[type="submit"]:hover {
+    background: linear-gradient(135deg, #2980b9, #1f639e);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(41, 128, 185, 0.3);
+}
+
+button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+.message {
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    display: none; /* Caché par défaut */
+}
+
+.message.visible {
+    display: block;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Style pour le conteneur du formulaire */
+.form-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+/* Style pour les champs requis */
+input:required,
+select:required,
+textarea:required {
+    border-left: 4px solid #3498db;
+}
+
+/* Style pour les messages d'erreur de validation */
+.error-message {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .business-profile-form {
+        margin: 20px;
+        padding: 20px;
+    }
+    
+    .form-container {
+        grid-template-columns: 1fr;
+    }
+}

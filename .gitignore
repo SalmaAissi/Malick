@@ -1,0 +1,14 @@
+﻿# Exclusion des fichiers sensibles
+.env
+.env.local
+node_modules/
+__pycache__/
+*.pyc
+*.db
+*.sqlite3
+*.key
+*.pem
+.vscode/
+.idea/
+.DS_Store
+npm-debug.log*

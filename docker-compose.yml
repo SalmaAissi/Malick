@@ -1,0 +1,70 @@
+
+
+version: '3.8'
+
+services:
+  # Base de données relationnelle
+  postgres:
+    image: postgres:15
+    container_name: salma_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-salma_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-salma_password}
+      POSTGRES_DB: ${DB_NAME:-salma_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Base de données graphe
+  neo4j:
+    image: neo4j:5
+    container_name: salma_neo4j
+    environment:
+      NEO4J_AUTH: ${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:-salma_neo4j_password}
+      NEO4J_PLUGINS: '["apoc"]'
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    ports:
+      - "7474:7474" # Interface HTTP
+      - "7687:7687" # Bolt protocol
+
+  # Backend Python (FastAPI)
+  backend:
+    build: ./app  # CORRIGÉ : était ./backend
+    container_name: salma_backend
+    depends_on:
+      - postgres
+      - neo4j
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER:-salma_user}:${DB_PASSWORD:-salma_password}@postgres:5432/${DB_NAME:-salma_db}
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=${NEO4J_USER:-neo4j}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-salma_neo4j_password}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - PYTHONPATH=/app
+    volumes:
+      - ./app:/app  # CORRIGÉ : était ./backend:/app et ./app:/app/app
+    ports:
+      - "8000:8000"
+    command: uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+
+  # Frontend React
+  frontend:
+    build: ./frontend
+    container_name: salma_frontend
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:8000
+
+volumes:
+  postgres_data:
+  neo4j_data:
+  neo4j_logs:
