@@ -14,11 +14,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Modèle pour le formulaire de contact
 class ContactForm(BaseModel):
     name: str
     email: str
     message: str
+
 
 # Modèle pour le profil d'entreprise
 class BusinessProfile(BaseModel):
@@ -32,13 +34,16 @@ class BusinessProfile(BaseModel):
     operating_countries: list
     responsible_name: str = None
 
+
 @app.get("/")
 def read_root():
     return {"message": "API SALMA opérationnelle", "status": "ok"}
 
+
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
+
 
 @app.post("/api/kpi/calculate")
 def calculate_kpi(kpi_type: str, inputs: dict):
@@ -51,23 +56,22 @@ def calculate_kpi(kpi_type: str, inputs: dict):
     try:
         if kpi_type.lower() == "roi":
             result = financial_formulas.calculate_roi(
-                inputs.get("net_profit"),
-                inputs.get("investment_cost")
+                inputs.get("net_profit"), inputs.get("investment_cost")
             )
         elif kpi_type.lower() == "profit_margin":
             result = financial_formulas.calculate_profit_margin(
-                inputs.get("revenue"),
-                inputs.get("cost_of_goods_sold")
+                inputs.get("revenue"), inputs.get("cost_of_goods_sold")
             )
         else:
             return {"error": f"Type de KPI non supporté: {kpi_type}"}
-        
+
         return {"success": True, "data": result}
-    
+
     except ValueError as e:
         return {"success": False, "error": str(e)}
     except Exception as e:
         return {"success": False, "error": f"Erreur de calcul: {str(e)}"}
+
 
 # Route pour le formulaire de contact
 @app.post("/api/contact")
@@ -79,16 +83,13 @@ async def submit_contact(form: ContactForm):
     print(f"   Nom: {form.name}")
     print(f"   Email: {form.email}")
     print(f"   Message: {form.message}")
-    
+
     return {
         "success": True,
         "message": "Votre message a été envoyé avec succès. Nous vous répondrons rapidement !",
-        "data": {
-            "name": form.name,
-            "email": form.email,
-            "message": form.message
-        }
+        "data": {"name": form.name, "email": form.email, "message": form.message},
     }
+
 
 # Route pour récupérer la liste des profils (GET)
 @app.get("/api/business-profile/")
@@ -99,6 +100,7 @@ async def get_business_profiles():
     Plus tard, vous irez chercher les données en base de données ici.
     """
     return []
+
 
 # Route pour créer un profil d'entreprise (POST)
 @app.post("/api/business-profile/")
@@ -121,6 +123,5 @@ async def create_business_profile(profile: BusinessProfile):
     return {
         "success": True,
         "message": f"Profil '{profile.company_name}' créé avec succès !",
-        "data": profile.dict()
-    }    
-    
+        "data": profile.dict(),
+    }
