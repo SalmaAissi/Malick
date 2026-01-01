@@ -40,7 +40,7 @@ jobs:
         cache: 'npm'
         cache-dependency-path: 'frontend/package-lock.json'  # <-- AJOUTEZ CETTE LIGNE
     - name: Install dependencies
-      run: npm ci
+      run: npm ci --legacy-peer-deps
     # Test minimal : vérifie que la construction (build) réussit
     - name: Run build
       run: npm run build
@@ -61,7 +61,7 @@ jobs:
       with:
         context: ./backend
         push: false
-        tags: ${{ github.repository }}-backend:latest
+        tags: ${{ github.repository | lower }}-backend:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
