@@ -1,0 +1,77 @@
+﻿name: CI - Full Stack (Python + Node.js)
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    # Test minimal : vérifie que l'application peut s'importer
+    - name: Run basic Python test
+      run: |
+        python -c "import sys; sys.path.insert(0, '.'); from app.main import app; print('Backend app import successful')"
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    needs: test-backend
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: 'frontend/package-lock.json'  # <-- AJOUTEZ CETTE LIGNE
+    - name: Install dependencies
+      run: npm ci
+    # Test minimal : vérifie que la construction (build) réussit
+    - name: Run build
+      run: npm run build
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: [test-backend, test-frontend]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Build and push backend Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./backend
+        push: false
+        tags: ${{ format('{0}-backend:latest', github.repository).toLower() }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Build and push frontend Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./frontend
+        push: false
+        tags: ${{ format('{0}-frontend:latest', github.repository).toLower() }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+# Déclenchement du workflow CI
