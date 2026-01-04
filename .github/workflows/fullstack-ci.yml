@@ -62,7 +62,7 @@ jobs:
       with:
         context: ./backend
         push: false
-        tags: ${{ format('{0}-backend:latest', github.repository).toLower() }}
+        tags: ${{ github.repository }}-backend:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
@@ -71,7 +71,7 @@ jobs:
       with:
         context: ./frontend
         push: false
-        tags: ${{ format('{0}-frontend:latest', github.repository).toLower() }}
+        tags: ${{ github.repository }}-frontend:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
 # Déclenchement du workflow CI
