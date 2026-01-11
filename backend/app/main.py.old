@@ -1,0 +1,78 @@
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Optional
+from datetime import datetime
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+# CORS ESSENTIEL pour le frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:3001"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# --- Modèles ---
+class BusinessProfileCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+    business_type: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    operating_countries: List[str] = []
+    responsible_name: Optional[str] = None
+
+# --- Base de données temporaire ---
+business_profiles_db = []
+current_id = 1
+
+# --- Routes existantes (gardez-les si elles existent) ---
+@app.get("/")
+async def root():
+    return {"message": "API SALMA opérationnelle", "status": "ok"}
+
+# --- Nouvelles routes Business Profile ---
+@app.get("/api/business-profile/")
+async def get_business_profiles():
+    return business_profiles_db
+
+@app.post("/api/business-profile/")
+async def create_business_profile(profile: BusinessProfileCreate):
+    global current_id
+    new_profile = {
+        "id": current_id,
+        "created_at": datetime.now().isoformat(),
+        "updated_at": datetime.now().isoformat(),
+        **profile.dict()
+    }
+    business_profiles_db.append(new_profile)
+    current_id += 1
+    return new_profile
+
+@app.delete("/api/business-profile/{profile_id}")
+async def delete_business_profile(profile_id: int):
+    global business_profiles_db
+    initial_length = len(business_profiles_db)
+    business_profiles_db = [p for p in business_profiles_db if p["id"] != profile_id]
+    
+    if len(business_profiles_db) == initial_length:
+        raise HTTPException(status_code=404, detail="Profil non trouvé")
+    
+    return {"message": f"Profil {profile_id} supprimé avec succès"}
+
+# --- Route pour Dashboard.js ---
+@app.get("/api/calculate/")
+async def calculate():
+    return {
+        "revenue": 15000,
+        "expenses": 5000,
+        "profit": 10000,
+        "growth": 15.5,
+        "customers": 245
+    }
+
+# Ajoutez ici vos routes existantes si nécessaire

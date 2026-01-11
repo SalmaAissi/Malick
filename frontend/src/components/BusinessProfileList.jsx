@@ -8,7 +8,7 @@ const BusinessProfileList = () => {
 
     const fetchProfiles = async () => {
   try {
-    const response = await axios.get('http://localhost:8002/api/business-profile/');
+    const response = await axios.get('http://localhost:8000/api/business-profile/');
     setProfiles(response.data);
   } catch (error) {
     console.log('Note: Backend non connecté. Utilisation de données fictives pour le développement.');
@@ -29,7 +29,7 @@ const BusinessProfileList = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Supprimer ce profil ?')) {
             try {
-                await axios.delete(`http://localhost:8002/api/business-profile/${id}`);
+                await axios.delete(`http://localhost:8000/api/business-profile/${id}`);
                 fetchProfiles();
             } catch (err) {
                 console.error('Erreur:', err);

@@ -50,7 +50,7 @@ const BusinessProfileForm = () => {
       };
 
             const response = await axios.post(
-        'http://localhost:8002/api/business-profile/',
+        'http://localhost:8000/api/business-profile/',
         dataToSend,
         {
           headers: {

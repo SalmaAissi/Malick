@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import BusinessProfileForm from './components/BusinessProfileForm';
 import BusinessProfileList from './components/BusinessProfileList';
 import './App.css';

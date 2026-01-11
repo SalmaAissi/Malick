@@ -6,7 +6,7 @@ function Dashboard() {
   
   const calculateExample = async () => {
     try {
-      const response = await fetch("http://localhost:8002/api/calculate", {
+      const response = await fetch("http://localhost:8000/api/calculate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
